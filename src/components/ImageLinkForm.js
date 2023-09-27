@@ -2,28 +2,23 @@ import React from "react";
 import { Input, Button, Typography } from "@material-tailwind/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
-export default function ImageLinkForm() {
-  const [text, setText] = React.useState("");
-  const onChange = ({ target }) => setText(target.value);
-
+export default function ImageLinkForm({ onInputChange, onButtonClick }) {
+  const text = "fefefe";
   return (
     <div className="mt-24">
       <div className="relative flex w-full max-w-[24rem] mx-auto">
         <Input
           type="text"
           label="Paste your link here"
-          value={text}
-          onChange={onChange}
-          className="pr-20"
-          containerProps={{
-            className: "min-w-0",
-          }}
+          className="pr-20, min-w-0"
+          onChange={onInputChange}
         />
         <Button
           size="sm"
           color={text ? "gray" : "blue-gray"}
           disabled={!text}
           className="!absolute right-1 top-1 rounded"
+          onClick={onButtonClick}
         >
           <MagnifyingGlassIcon className="h-4" />
         </Button>
