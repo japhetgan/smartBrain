@@ -42,7 +42,7 @@ class App extends Component {
     this.state = {
       input: "",
       imageURL: "",
-      box: {},
+      boxRegions: [],
     };
   }
 
@@ -50,11 +50,14 @@ class App extends Component {
     this.setState({ input: event.target.value });
   };
 
-  boundingBox = (response) => {
-    this.setState({
-      box: response.outputs[0].data.regions[0].region_info.bounding_box,
-    });
-    console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
+  calculateFaceLocation = (response) => {
+    return response.outputs[0].data.regions;
+  };
+
+  displayFaceBox = (obj) => {
+    this.setState({ boxRegions: obj }, () =>
+      console.log(this.setState.boxRegions)
+    );
   };
 
   onButtonClick = () => {
@@ -64,7 +67,7 @@ class App extends Component {
       clarifaiRequestOptions(this.state.input)
     )
       .then((response) => response.json())
-      .then((result) => this.boundingBox(result))
+      .then((result) => this.displayFaceBox(this.calculateFaceLocation(result)))
       .catch((error) => console.log("error", error));
   };
 
@@ -73,10 +76,14 @@ class App extends Component {
       <div className="">
         <Navigation />
         <ImageLinkForm
+          input={this.state.input}
           onInputChange={this.onInputChange}
           onButtonClick={this.onButtonClick}
         />
-        <FaceRecognition imageURL={this.state.imageURL} />
+        <FaceRecognition
+          boxRegions={this.state.boxRegions}
+          imageURL={this.state.imageURL}
+        />
       </div>
     );
   }

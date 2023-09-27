@@ -2,8 +2,7 @@ import React from "react";
 import { Input, Button, Typography } from "@material-tailwind/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
-export default function ImageLinkForm({ onInputChange, onButtonClick }) {
-  const text = "fefefe";
+export default function ImageLinkForm({ onInputChange, onButtonClick, input }) {
   return (
     <div className="mt-24">
       <div className="relative flex w-full max-w-[24rem] mx-auto">
@@ -15,8 +14,8 @@ export default function ImageLinkForm({ onInputChange, onButtonClick }) {
         />
         <Button
           size="sm"
-          color={text ? "gray" : "blue-gray"}
-          disabled={!text}
+          color={input ? "gray" : "blue-gray"}
+          disabled={!input}
           className="!absolute right-1 top-1 rounded"
           onClick={onButtonClick}
         >
