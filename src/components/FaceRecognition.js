@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
-export default function FaceRecognition({ imageURL, boxRegions = [] }) {
+export default function FaceRecognition({ input, boxRegions = [] }) {
   const image = document.getElementById("inputImage");
   const width = image ? Number(image.offsetWidth) : 1;
   const height = image ? Number(image.offsetHeight) : 1;
@@ -12,7 +12,7 @@ export default function FaceRecognition({ imageURL, boxRegions = [] }) {
           id="inputImage"
           className="max-w-sm rounded-lg"
           alt=""
-          src={imageURL}
+          src={input}
         />
         {boxRegions.map((obj, index) => {
           const data = obj.region_info.bounding_box;

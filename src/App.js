@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Navigation from "./components/Navigation";
 import ImageLinkForm from "./components/ImageLinkForm";
 import FaceRecognition from "./components/FaceRecognition";
+import SignIn from "./components/SignIn";
 
 const PAT = "2299a679ea584861bb8d798870940edb";
 const USER_ID = "bhn3dh1qh8ah";
@@ -36,57 +37,46 @@ const clarifaiRequestOptions = (IMAGE_URL) => {
   return requestOptions;
 };
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      input: "",
-      imageURL: "",
-      boxRegions: [],
-    };
-  }
+function App() {
+  const [input, setInput] = useState("");
+  const [imageURL, setImageURL] = useState("");
+  const [boxRegions, setBoxRegions] = useState([]);
+  const [route, setRoute] = useState("signIn");
 
-  onInputChange = (event) => {
-    this.setState({ input: event.target.value });
+  const onInputChange = (event) => {
+    setInput(event.target.value);
   };
 
-  calculateFaceLocation = (response) => {
+  const getBoxRegions = (response) => {
     return response.outputs[0].data.regions;
   };
 
-  displayFaceBox = (obj) => {
-    this.setState({ boxRegions: obj }, () =>
-      console.log(this.setState.boxRegions)
-    );
+  const displayFaceBox = (obj) => {
+    setBoxRegions(obj);
   };
 
-  onButtonClick = () => {
-    this.setState({ imageURL: this.state.input });
+  const onButtonClick = () => {
     fetch(
       "https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs",
-      clarifaiRequestOptions(this.state.input)
+      clarifaiRequestOptions(input)
     )
       .then((response) => response.json())
-      .then((result) => this.displayFaceBox(this.calculateFaceLocation(result)))
+      .then((result) => displayFaceBox(getBoxRegions(result)))
       .catch((error) => console.log("error", error));
   };
 
-  render() {
-    return (
-      <div className="">
-        <Navigation />
-        <ImageLinkForm
-          input={this.state.input}
-          onInputChange={this.onInputChange}
-          onButtonClick={this.onButtonClick}
-        />
-        <FaceRecognition
-          boxRegions={this.state.boxRegions}
-          imageURL={this.state.imageURL}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className="">
+      {/* <SignIn /> */}
+      <Navigation />
+      <ImageLinkForm
+        input={input}
+        onInputChange={onInputChange}
+        onButtonClick={onButtonClick}
+      />
+      <FaceRecognition boxRegions={boxRegions} input={input} />
+    </div>
+  );
 }
 
 export default App;
