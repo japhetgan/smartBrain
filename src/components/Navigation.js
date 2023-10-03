@@ -50,7 +50,7 @@ const profileMenuItems = [
   },
 ];
 
-function ProfileMenu() {
+function ProfileMenu({ onRouteChange }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const closeMenu = () => setIsMenuOpen(false);
@@ -84,7 +84,9 @@ function ProfileMenu() {
           return (
             <MenuItem
               key={label}
-              onClick={closeMenu}
+              onClick={
+                label === "Sign Out" ? () => onRouteChange("signIn") : closeMenu
+              }
               className={`flex items-center gap-2 rounded ${
                 isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
@@ -225,7 +227,7 @@ function NavList() {
   );
 }
 
-function Navigation() {
+function Navigation({ onRouteChange }) {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
@@ -259,7 +261,7 @@ function Navigation() {
         >
           <Bars2Icon className="h-6 w-6" />
         </IconButton>
-        <ProfileMenu />
+        <ProfileMenu onRouteChange={onRouteChange} />
       </div>
       <Collapse open={isNavOpen} className="overflow-scroll">
         <NavList />

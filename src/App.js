@@ -3,6 +3,7 @@ import Navigation from "./components/Navigation";
 import ImageLinkForm from "./components/ImageLinkForm";
 import FaceRecognition from "./components/FaceRecognition";
 import SignIn from "./components/SignIn";
+import Registration from "./components/Registration";
 
 const PAT = "2299a679ea584861bb8d798870940edb";
 const USER_ID = "bhn3dh1qh8ah";
@@ -39,11 +40,11 @@ const clarifaiRequestOptions = (IMAGE_URL) => {
 
 function App() {
   const [input, setInput] = useState("");
-  const [imageURL, setImageURL] = useState("");
   const [boxRegions, setBoxRegions] = useState([]);
   const [route, setRoute] = useState("signIn");
 
   const onInputChange = (event) => {
+    setBoxRegions([]);
     setInput(event.target.value);
   };
 
@@ -65,10 +66,15 @@ function App() {
       .catch((error) => console.log("error", error));
   };
 
-  return (
-    <div className="">
-      {/* <SignIn /> */}
-      <Navigation />
+  const onRouteChange = (route) => {
+    setBoxRegions([]);
+    setInput("");
+    setRoute(route);
+  };
+
+  return route === "home" ? (
+    <div>
+      <Navigation onRouteChange={onRouteChange} />
       <ImageLinkForm
         input={input}
         onInputChange={onInputChange}
@@ -76,6 +82,10 @@ function App() {
       />
       <FaceRecognition boxRegions={boxRegions} input={input} />
     </div>
+  ) : route === "registration" ? (
+    <Registration onRouteChange={onRouteChange} />
+  ) : (
+    <SignIn onRouteChange={onRouteChange} />
   );
 }
 

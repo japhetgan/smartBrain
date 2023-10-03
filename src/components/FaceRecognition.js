@@ -10,7 +10,7 @@ export default function FaceRecognition({ input, boxRegions = [] }) {
       <div className="my-12 absolute">
         <img
           id="inputImage"
-          className="max-w-sm rounded-lg"
+          className="max-w-md rounded-lg"
           alt=""
           src={input}
         />
@@ -30,7 +30,9 @@ export default function FaceRecognition({ input, boxRegions = [] }) {
                 left: colLeft,
                 right: colRight,
               }}
-              className="absolute flex flex-wrap justify-center cursor-pointer shadow-[0_0_0_3px_rgb(20,157,242)] "
+              className={`${
+                boxRegions.length === 0 ? "invisible" : "visible"
+              } absolute flex flex-wrap justify-center cursor-pointer shadow-[0_0_0_3px_rgb(20,157,242)]`}
             ></div>
           );
         })}

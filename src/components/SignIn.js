@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@material-tailwind/react";
 
-export default function SignIn() {
+export default function SignIn({ onRouteChange }) {
   return (
     <div className="h-screen flex justify-center items-center">
       <div className="w-96">
@@ -31,7 +31,13 @@ export default function SignIn() {
           Forgot password?
         </p>
         <div className="">
-          <Button size="lg" className="mt-6 w-full">
+          <Button
+            onClick={() => {
+              onRouteChange("home");
+            }}
+            size="lg"
+            className="mt-6 w-full"
+          >
             SIGN IN
           </Button>
 
@@ -72,7 +78,14 @@ export default function SignIn() {
         </div>
         <p className="mt-5 text-sm text-center text-blue-gray-900">
           {`Not registered? `}
-          <span className="font-semibold cursor-pointer">Create account</span>
+          <span
+            onClick={() => {
+              onRouteChange("registration");
+            }}
+            className="font-semibold cursor-pointer"
+          >
+            Create account
+          </span>
         </p>
       </div>
     </div>
