@@ -1,73 +1,59 @@
 import React, { useState } from "react";
 import Navigation from "./components/Navigation";
 import ImageLinkForm from "./components/ImageLinkForm";
-import FaceRecognition from "./components/FaceRecognition";
+import ImageRecognition from "./components/ImageRecognition";
 import SignIn from "./components/SignIn";
 import Registration from "./components/Registration";
-
-const PAT = "2299a679ea584861bb8d798870940edb";
-const USER_ID = "bhn3dh1qh8ah";
-const APP_ID = "smartBrain_app";
-const MODEL_ID = "face-detection";
-
-const clarifaiRequestOptions = (IMAGE_URL) => {
-  const raw = JSON.stringify({
-    user_app_id: {
-      user_id: USER_ID,
-      app_id: APP_ID,
-    },
-    inputs: [
-      {
-        data: {
-          image: {
-            url: IMAGE_URL,
-          },
-        },
-      },
-    ],
-  });
-
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      Authorization: "Key " + PAT,
-    },
-    body: raw,
-  };
-  return requestOptions;
-};
+import { Typography } from "@material-tailwind/react";
 
 function App() {
   const [input, setInput] = useState("");
   const [boxRegions, setBoxRegions] = useState([]);
   const [route, setRoute] = useState("signIn");
+  const [caption, setCaption] = useState("");
+  const [faceRegions, setFaceRegions] = useState([]);
 
   const onInputChange = (event) => {
-    setBoxRegions([]);
+    setCaption("");
+    setFaceRegions([]);
     setInput(event.target.value);
   };
 
   const getBoxRegions = (response) => {
-    return response.outputs[0].data.regions;
+    return response.data.regions;
   };
 
-  const displayFaceBox = (obj) => {
-    setBoxRegions(obj);
+  const displayFaceBox = (response) => {
+    setFaceRegions(response);
+  };
+
+  const getCaption = (obj) => {
+    const result = obj.data.text.raw;
+    const caption =
+      result.toLowerCase().charAt(0).toUpperCase() + result.slice(1);
+    setCaption(caption);
   };
 
   const onButtonClick = () => {
-    fetch(
-      "https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs",
-      clarifaiRequestOptions(input)
-    )
+    fetch("http://localhost:3000/imageUrl", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        input,
+      }),
+    })
       .then((response) => response.json())
-      .then((result) => displayFaceBox(getBoxRegions(result)))
+      .then((result) => {
+        getCaption(result[0]);
+        displayFaceBox(getBoxRegions(result[1]));
+      })
       .catch((error) => console.log("error", error));
   };
 
   const onRouteChange = (route) => {
-    setBoxRegions([]);
+    setFaceRegions([]);
     setInput("");
     setRoute(route);
   };
@@ -80,7 +66,11 @@ function App() {
         onInputChange={onInputChange}
         onButtonClick={onButtonClick}
       />
-      <FaceRecognition boxRegions={boxRegions} input={input} />
+      <ImageRecognition
+        faceRegions={faceRegions}
+        caption={caption}
+        input={input}
+      />
     </div>
   ) : route === "registration" ? (
     <Registration onRouteChange={onRouteChange} />

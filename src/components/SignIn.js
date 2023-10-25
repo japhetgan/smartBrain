@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@material-tailwind/react";
 
 export default function SignIn({ onRouteChange }) {
+  const [signIn_Email, setSignIn_Email] = useState("");
+  const [signIn_Password, setSignIn_Password] = useState("");
+  const [status, setStatus] = useState("");
+
   return (
     <div className="h-screen flex justify-center items-center">
       <div className="w-96">
@@ -12,9 +16,12 @@ export default function SignIn({ onRouteChange }) {
           Enter your username and password to sign in
         </p>
         <p className="mt-10 mb-1 font-semibold text-sm text-blue-gray-900">
-          Username
+          Usernam
         </p>
         <input
+          onChange={(event) => {
+            setSignIn_Email(event.target.value);
+          }}
           type="email"
           placeholder="example_username"
           className="border border-blue-gray-200 text-gray-900 text-sm rounded-md  focus:border-black block w-full p-2.5"
@@ -23,6 +30,9 @@ export default function SignIn({ onRouteChange }) {
           Password
         </p>
         <input
+          onChange={(event) => {
+            setSignIn_Password(event.target.value);
+          }}
           type="password"
           placeholder="password123"
           className=" border border-blue-gray-200 text-gray-900 text-sm rounded-md  focus:border-black block w-full p-2.5"
@@ -33,7 +43,22 @@ export default function SignIn({ onRouteChange }) {
         <div className="">
           <Button
             onClick={() => {
-              onRouteChange("home");
+              fetch("http://localhost:3000/signIn", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  email: signIn_Email,
+                  password: signIn_Password,
+                }),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  data === "success"
+                    ? onRouteChange("home")
+                    : setStatus("failed");
+                });
             }}
             size="lg"
             className="mt-6 w-full"

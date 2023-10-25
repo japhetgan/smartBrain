@@ -4,7 +4,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function ImageLinkForm({ onInputChange, onButtonClick, input }) {
   return (
-    <div className="mt-24">
+    <div className="mt-12">
       <div className="relative flex w-full max-w-[24rem] mx-auto">
         <Input
           type="text"
@@ -25,7 +25,7 @@ export default function ImageLinkForm({ onInputChange, onButtonClick, input }) {
       <Typography
         variant="small"
         color="gray"
-        className="mt-2 flex items-center gap-1 font-normal justify-center"
+        className="my-5 flex items-center gap-1 font-normal justify-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
