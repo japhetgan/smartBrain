@@ -2,7 +2,12 @@ import React from "react";
 import { Input, Button, Typography } from "@material-tailwind/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
-export default function ImageLinkForm({ onInputChange, onButtonClick, input }) {
+export default function ImageLinkForm({
+  onInputChange,
+  onButtonClick,
+  input,
+  validURL,
+}) {
   return (
     <div className="mt-12">
       <div className="relative flex w-full max-w-[24rem] mx-auto">
@@ -15,7 +20,7 @@ export default function ImageLinkForm({ onInputChange, onButtonClick, input }) {
         <Button
           size="sm"
           color={input ? "gray" : "blue-gray"}
-          disabled={!input}
+          disabled={!(Boolean(validURL) && Boolean(input))}
           className="!absolute right-1 top-1 rounded"
           onClick={onButtonClick}
         >
@@ -25,7 +30,7 @@ export default function ImageLinkForm({ onInputChange, onButtonClick, input }) {
       <Typography
         variant="small"
         color="gray"
-        className="my-5 flex items-center gap-1 font-normal justify-center"
+        className="mt-5 flex items-center gap-1 font-normal justify-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +44,15 @@ export default function ImageLinkForm({ onInputChange, onButtonClick, input }) {
             clipRule="evenodd"
           />
         </svg>
-        Make sure that the link ends with ".jpeg" or ".png"
+        Make sure that the link ends with ".jpg" or ".png"
+      </Typography>
+      <Typography
+        variant="small"
+        className={`${
+          validURL ? "hidden" : "visible"
+        } text-center font-bold text-red-600`}
+      >
+        Please enter a valid link
       </Typography>
     </div>
   );
